@@ -22,7 +22,7 @@ Do not use a Gmail API key for login. The login flow needs Google OAuth 2.0 cred
 4. In Google AI Studio, create a Gemini API key and set `GEMINI_API_KEY`. The key must only be read by server code; never prefix it with `NEXT_PUBLIC_`.
 5. Set `GOOGLE_ALLOWED_DOMAIN` only if access must be limited to a verified government or organization domain. Domain checks are not a replacement for server-side RBAC.
 
-The next implementation slice is the server-side OAuth session and RBAC layer, followed by a protected Gemini route for OCR/compliance pre-checks. Do not connect real applicant documents until those controls and audit logging are in place.
+Google sign-in is implemented at `/api/auth/login/google` and `/api/auth/callback/google`. Gemini requests use the protected `/api/gemini` route. These routes are suitable for staging; add database-backed sessions, RBAC, audit logging, private storage, and document scanning before handling real applicant documents.
 
 ## Security baseline
 
@@ -46,4 +46,4 @@ The next implementation slice is the server-side OAuth session and RBAC layer, f
 
 The `render.yaml` Blueprint uses `npm ci && npm run build`, `npm run start`, and `/api/health` as the health check.
 
-The current screen is a frontend prototype. It does not yet claim to authenticate users, persist applications, or encrypt uploaded documents; those server-side controls must be implemented before handling real citizen or business data.
+The application persists the current browser prototype workspace locally. It does not yet provide database-backed application persistence or encrypted document uploads; those server-side controls must be implemented before handling real citizen or business data.

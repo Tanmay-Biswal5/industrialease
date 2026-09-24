@@ -210,7 +210,7 @@ function AccessScreen({ onOpen, onGuest }: { onOpen: (workspace: SavedWorkspace)
         <div className="access-tabs" role="tablist"><button type="button" className={mode === "register" ? "active" : ""} onClick={() => { setMode("register"); setError(""); }}>New account</button><button type="button" className={mode === "signin" ? "active" : ""} onClick={() => { setMode("signin"); setError(""); }}>Sign in</button></div>
         <h2>{mode === "register" ? "Sign in with Google." : "Welcome back."}</h2>
         <p className="access-card-copy">{mode === "register" ? "Use your Google account to create a private workspace. Your Google password stays with Google." : "Pick up your saved application journey from this browser."}</p>
-        <a className="google-oauth-button" href="/api/auth/login/google"><span className="google-g">G</span> Continue with Google <b>→</b></a>
+        <a className="google-oauth-button" href="/api/auth/login/google"><img className="google-logo" src="/google-g.svg" alt="Google" /> Continue with Google <b>→</b></a>
         <div className="access-divider"><span>or use a workspace password</span></div>
         <form onSubmit={submit}>
           <label htmlFor="gmail-address">Gmail address</label>
@@ -218,7 +218,7 @@ function AccessScreen({ onOpen, onGuest }: { onOpen: (workspace: SavedWorkspace)
           <label htmlFor="workspace-password">Workspace password</label>
           <input id="workspace-password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="At least 8 characters" autoComplete={mode === "register" ? "new-password" : "current-password"} />
           {error && <p className="access-error" role="alert">{error}</p>}
-          <button className="access-primary" type="submit"><span className="google-g">G</span> {mode === "register" ? "Create account" : "Sign in"}<b>→</b></button>
+          <button className="access-primary" type="submit"><img className="google-logo" src="/google-g.svg" alt="Google" /> {mode === "register" ? "Create account" : "Sign in"}<b>→</b></button>
         </form>
         <div className="access-divider"><span>or explore</span></div>
         <button className="access-guest" type="button" onClick={onGuest}>Continue as guest <span>→</span></button>

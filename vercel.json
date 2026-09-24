@@ -1,6 +1,9 @@
 {
-  "framework": "nextjs",
-  "buildCommand": "npm run build",
-  "installCommand": "npm install",
-  "outputDirectory": ".next"
+  "services": {
+    "industria-lease": {
+      "root": ".",
+      "framework": "nextjs",
+      "buildCommand": "npm run build"
+    }
+  }
 }

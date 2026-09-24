@@ -34,16 +34,13 @@ Google sign-in is implemented at `/api/auth/login/google` and `/api/auth/callbac
 - Set `AUTH_SECRET`, database credentials, and storage credentials only through the deployment secret manager. `.env.local` is ignored and must never be committed.
 - Before production: add dependency scanning, SAST/DAST, backup restore drills, key rotation, retention/deletion policies, incident response, and an independent security review.
 
-## Deploy on Render
+## Deploy on Vercel
 
-1. Create a private GitHub repository and push the `industria-lease` folder, excluding `.env.local`.
-2. In Render, choose **New > Blueprint**, connect the repository, and select `render.yaml`.
-3. Enter the `sync: false` values in Render's Environment page. Never commit them to `render.yaml`.
-4. Add the production Google OAuth callback URI after Render gives the service URL:
-	`https://YOUR-RENDER-SERVICE.onrender.com/api/auth/callback/google`
-5. Verify `/api/health`, HTTPS, logs, and the staging deployment before using production data.
-6. Provision PostgreSQL, Redis, private object storage, KMS, centralized logs, and uptime monitoring in the approved region before enabling real documents.
-
-The `render.yaml` Blueprint uses `npm ci && npm run build`, `npm run start`, and `/api/health` as the health check.
+1. Import the GitHub repository into Vercel with `industria-lease` as the project root.
+2. Add `AUTH_SECRET`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `GEMINI_API_KEY` as server-only environment variables.
+3. Add the production OAuth callback URI in Google Cloud:
+	`https://industrialease-cognitive-quest.vercel.app/api/auth/callback/google`
+4. Deploy with Vercel's standard Next.js build command: `npm run build`.
+5. Verify `/api/health` after deployment.
 
 The application persists the current browser prototype workspace locally. It does not yet provide database-backed application persistence or encrypted document uploads; those server-side controls must be implemented before handling real citizen or business data.

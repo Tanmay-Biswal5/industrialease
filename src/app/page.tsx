@@ -135,7 +135,25 @@ function GovAssistFlow({ account, onAccountChange, onNotice }: { account: SavedW
     else saveProgress(answers, step, true);
   }
 
-  if (showPlan) return <GovAssistPlan answers={answers} onRestart={() => saveProgress(emptyAnswers, 0, false)} onNotice={onNotice} />;
+  async function handleNotice(message: string) {
+    const assistantRequest = "The assistant will use your saved profile in the next implementation step.";
+    if (message !== assistantRequest) {
+      onNotice(message);
+      return;
+    }
+    onNotice(`For ${answers.idea || "your business"}, start by verifying your location and business structure requirements.`);
+    try {
+      const response = await fetch("/api/gemini", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ prompt: `Give one concise next step for this business: ${answers.idea}. Location: ${answers.district}, ${answers.state}.` }) });
+      if (response.ok) {
+        const result = await response.json() as { text?: string };
+        if (result.text) onNotice(result.text);
+      }
+    } catch {
+      // The local profile response remains available when Gemini is unavailable.
+    }
+  }
+
+  if (showPlan) return <GovAssistPlan answers={answers} onRestart={() => saveProgress(emptyAnswers, 0, false)} onNotice={handleNotice} />;
 
   return <main className="gov-shell">
     <header className="gov-header"><div className="access-brand"><span className="brand-mark">IL</span><span>INDUSTRIALEASE</span></div><div className="gov-header-actions"><span className="gov-header-note">INDIA · SOURCE-BACKED DECISION SUPPORT</span>{account && <span className="account-badge">{account.email}</span>}</div></header>
@@ -222,7 +240,6 @@ function AccessScreen({ onOpen, onGuest }: { onOpen: (workspace: SavedWorkspace)
         </form>
         <div className="access-divider"><span>or explore</span></div>
         <button className="access-guest" type="button" onClick={onGuest}>Continue as guest <span>→</span></button>
-        <p className="access-footnote">Google handles your Gmail login securely. The optional workspace password is separate and never replaces Google authentication.</p>
       </div>
     </section>
     <footer className="access-footer"><span>INDUSTRIALEASE / 2026</span><span>Protected workspace · Maharashtra, India</span></footer>
